@@ -35,6 +35,7 @@
 
         <!--	Global	-->
         <dependency>
+            <!--	This dependency must be injected directly, otherwise wrong version pulled		-->
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
             <version>4.15.0</version>
