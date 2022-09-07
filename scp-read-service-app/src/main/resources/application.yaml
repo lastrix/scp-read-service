@@ -2,6 +2,12 @@
 db:
   schema: 'scp_read_service'
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: 'prometheus,health,info,metric'
+
 spring:
   profiles:
     active: 'prod'
@@ -28,7 +34,8 @@ server:
       force-response: 'true'
 
 ########## Application related configuration goes here ##############
-
+scp:
+  debug: "${SCP_RDS_DEBUG:false}"
 
 
 
