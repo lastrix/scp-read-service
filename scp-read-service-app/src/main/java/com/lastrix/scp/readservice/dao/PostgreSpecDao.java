@@ -33,7 +33,8 @@ public class PostgreSpecDao implements SpecDao {
     @Override
     public Slice<EnrolleeSelect> slice(UUID specId, int sessionId, Pagination pagination) {
         var r = jdbc.query(
-                "SELECT * FROM scp_read_service.enrollee_select s WHERE s.spec_id = ? AND s.session_id = ? " +
+                "SELECT user_id, status, score, created_stamp, confirmed_stamp,canceled_stamp, modified_stamp, ordinal " +
+                        "FROM scp_read_service.enrollee_select s WHERE s.spec_id = ? AND s.session_id = ? " +
                         "ORDER BY s.score, s.confirmed_stamp, s.created_stamp " +
                         "LIMIT ? " +
                         "OFFSET ? ",
