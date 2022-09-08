@@ -2,6 +2,7 @@ package com.lastrix.scp.readservice.web.v1;
 
 import com.lastrix.scp.lib.rest.Pagination;
 import com.lastrix.scp.lib.rest.Rest;
+import com.lastrix.scp.lib.rest.authz.RequireRoles;
 import com.lastrix.scp.readservice.model.EnrolleeSelect;
 import com.lastrix.scp.readservice.service.SpecService;
 import io.micrometer.core.annotation.Timed;
@@ -20,6 +21,7 @@ public class SpecController {
         this.srv = srv;
     }
 
+    @RequireRoles("USER")
     @Timed("spec_slice")
     @PostMapping("/{specId}")
     public Rest<EnrolleeSelect> slice(@PathVariable UUID specId, @PathVariable int sessionId, @RequestBody Pagination pagination) {
@@ -30,6 +32,7 @@ public class SpecController {
         return Rest.of(srv.slice(specId, sessionId, pagination), pagination);
     }
 
+    @RequireRoles("USER")
     @Timed("spec_total")
     @GetMapping("/{specId}/total")
     public Rest<Long> total(@PathVariable UUID specId, @PathVariable int sessionId) {
