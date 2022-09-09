@@ -24,21 +24,35 @@ public class PostgreSpecDao implements SpecDao {
     @Override
     public long getTotal(UUID specId, int sessionId) {
         var r = jdbc.queryForObject(
-                "SELECT COUNT(*) FROM scp_read_service.enrollee_select s WHERE s.spec_id = ? AND s.session_id = ?",
-                new Object[]{specId, sessionId},
-                (rs, rowNum) -> rs.getLong(1));
+                """
+                        SELECT COUNT(*)
+                        FROM scp_read_service.enrollee_select s
+                        WHERE   s.spec_id = ?
+                            AND s.session_id = ?""",
+                (rs, rowNum) -> rs.getLong(1),
+                specId, sessionId
+        );
         return r == null ? 0 : r;
     }
 
     @Override
     public Slice<EnrolleeSelect> slice(UUID specId, int sessionId, Pagination pagination) {
         var r = jdbc.query(
-                "SELECT user_id, status, score, created_stamp, confirmed_stamp,canceled_stamp, modified_stamp, ordinal " +
-                        "FROM scp_read_service.enrollee_select s WHERE s.spec_id = ? AND s.session_id = ? " +
-                        "ORDER BY s.score, s.confirmed_stamp, s.created_stamp " +
-                        "LIMIT ? " +
-                        "OFFSET ? ",
-                new Object[]{specId, sessionId, pagination.getPageSize(), pagination.getPage() * pagination.getPageSize()},
+                """
+                        SELECT  user_id,
+                                status,
+                                score,
+                                created_stamp,
+                                confirmed_stamp,
+                                canceled_stamp,
+                                modified_stamp,
+                                ordinal
+                        FROM scp_read_service.enrollee_select s
+                        WHERE   s.spec_id = ?
+                            AND s.session_id = ?
+                        ORDER BY s.score, s.confirmed_stamp, s.created_stamp
+                        LIMIT ?
+                        OFFSET ?""",
                 (rs, rowNum) -> {
                     var s = new EnrolleeSelect();
                     s.setSpecId(specId);
@@ -52,7 +66,11 @@ public class PostgreSpecDao implements SpecDao {
                     s.setModifiedStamp(toInstantOrNull(rs, 7));
                     s.setOrdinal(rs.getShort(8));
                     return s;
-                }
+                },
+                specId,
+                sessionId,
+                pagination.getPageSize(),
+                pagination.getPage() * pagination.getPageSize()
         );
         return new SliceImpl<>(r);
     }

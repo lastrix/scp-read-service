@@ -1,6 +1,7 @@
 package com.lastrix.scp.readservice.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import io.swagger.v3.oas.annotations.media.Schema;
 
 import java.time.Instant;
 import java.util.UUID;
@@ -8,20 +9,31 @@ import java.util.UUID;
 /**
  * This class hold information about enrollee selection change
  */
+@Schema(description = "Enrollee selected speciality")
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class EnrolleeSelect {
+    @Schema(description = "Enrollee user id")
     private UUID userId;
+    @Schema(description = "Selection campaign id")
     private int sessionId;
+    @Schema(description = "The selected speciality id")
     private UUID specId;
+    @Schema(description = "Status of selection: 0 for applied, 1 for confirmed and 2 for cancelled")
     private short status;
+    @Schema(description = "Assigned enrollee score")
     private int score;
+    @Schema(description = "Date of enrollee's application")
     private Instant createdStamp;
+    @Schema(description = "Date of enrollee's selection confirmation")
     private Instant confirmedStamp;
+    @Schema(description = "Date of enrollee's selection cancelling")
     private Instant cancelledStamp;
+    @Schema(description = "Last modification date")
     private Instant modifiedStamp;
     /**
      * Change number of this record
      */
+    @Schema(description = "Change number")
     private short ordinal;
 
     public EnrolleeSelect() {
